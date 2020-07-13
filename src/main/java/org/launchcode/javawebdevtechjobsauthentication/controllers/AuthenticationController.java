@@ -26,7 +26,7 @@ public class AuthenticationController {
     /*Establish a key to store temporarily user ID*/
     private static final String userSessionKey = "user";
 
-    /* Get Handler to return null if user not found or is empty, otherwise find user*/
+    /* Get from session Handler to return null if user not found or is empty, otherwise find user*/
     public User getUserFromSession(HttpSession session) {
         Integer userId = (Integer) session.getAttribute(userSessionKey);
         if (userId == null) {
@@ -47,6 +47,7 @@ public class AuthenticationController {
         session.setAttribute(userSessionKey, user.getId());
     }
 
+    /*Display new user registration form*/
     @GetMapping("/register")
     public String displayRegistrationForm(Model model) {
         model.addAttribute(new RegisterForm());
@@ -54,6 +55,7 @@ public class AuthenticationController {
         return "register";
     }
 
+    /*Handler to  validate registration information. Otherwise, create a new user session.*/
     @PostMapping("/register")
     public String processRegistrationForm(@ModelAttribute @Valid RegisterForm registerForm,
                                           Errors errors, HttpServletRequest request,
@@ -87,6 +89,7 @@ public class AuthenticationController {
         return "redirect:";
     }
 
+    /*Get handler to display login form.*/
     @GetMapping("/login")
     public String displayLoginForm(Model model) {
         model.addAttribute(new LoginForm());
@@ -94,6 +97,7 @@ public class AuthenticationController {
         return "login";
     }
 
+    /*Process field data in the login form, validate username and password, and if correct then store in session.*/
     @PostMapping("/login")
     public String processLoginForm(@ModelAttribute @Valid LoginForm loginForm,
                                    Errors errors, HttpServletRequest request,
@@ -125,6 +129,7 @@ public class AuthenticationController {
         return "redirect:";
     }
 
+    /*Get handler to end (invalidate) session when clicking the logout button, and redirect user to login form.*/
     @GetMapping("/logout")
     public String logout(HttpServletRequest request){
         request.getSession().invalidate();
